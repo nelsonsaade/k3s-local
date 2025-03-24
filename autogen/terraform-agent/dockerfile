@@ -1,0 +1,17 @@
+FROM python:3.10
+
+WORKDIR /app
+
+# Instalar dependencias
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar código fuente
+COPY . .
+
+# Instalar Terraform
+RUN apt-get update && apt-get install -y wget unzip
+RUN wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip
+RUN unzip terraform_1.6.0_linux_amd64.zip && mv terraform /usr/local/bin/
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
